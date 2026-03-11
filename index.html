@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Blox Fruits Account Store</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+<div class="logo">BloxFruit Store</div>
+
+<input type="text" id="search" placeholder="Cari akun..." onkeyup="renderAccounts()">
+
+<select id="filter" onchange="renderAccounts()">
+<option value="all">Semua Harga</option>
+<option value="100000">Di bawah 100k</option>
+<option value="150000">Di bawah 150k</option>
+</select>
+
+<button onclick="toggleAdmin()">Admin</button>
+
+</nav>
+
+
+<header class="hero">
+
+<h1>Jual Akun Blox Fruits</h1>
+
+<p>Akun Murah • Aman • Siap Pakai</p>
+
+</header>
+
+
+<section class="store" id="store"></section>
+
+
+<div id="popup" class="popup">
+
+<div class="popup-box">
+
+<h2>Konfirmasi Pembelian</h2>
+
+<p id="detail"></p>
+
+<button onclick="checkout()">Checkout</button>
+
+<button onclick="closePopup()">Batal</button>
+
+</div>
+
+</div>
+
+
+<div id="adminPanel" class="admin">
+
+<h2>Tambah Akun</h2>
+
+<input type="text" id="name" placeholder="Nama akun">
+
+<input type="text" id="fruit" placeholder="Fruit">
+
+<input type="number" id="price" placeholder="Harga">
+
+<button onclick="addAccount()">Tambah</button>
+
+</div>
+
+
+<footer>
+
+<p>© 2026 BloxFruit Store</p>
+
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
