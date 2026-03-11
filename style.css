@@ -1,0 +1,150 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+background:
+linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.9)),
+url("https://images7.alphacoders.com/118/1181423.jpg");
+
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+
+color:white;
+
+}
+
+.navbar{
+
+display:flex;
+justify-content:space-between;
+padding:20px 40px;
+background:rgba(0,0,0,0.85);
+
+}
+
+.navbar ul{
+
+display:flex;
+gap:20px;
+list-style:none;
+
+}
+
+.navbar a{
+
+color:white;
+text-decoration:none;
+
+}
+
+.logo{
+
+color:#00ffae;
+font-size:22px;
+font-weight:600;
+
+}
+
+.hero{
+
+text-align:center;
+padding:120px 20px;
+
+}
+
+.hero h1{
+
+font-size:50px;
+text-shadow:0 0 20px #00ffae;
+
+}
+
+.hero p{
+
+margin:15px 0;
+
+}
+
+.btn{
+
+background:linear-gradient(45deg,#00ffae,#00c3ff);
+padding:12px 30px;
+border-radius:8px;
+color:black;
+text-decoration:none;
+font-weight:600;
+
+}
+
+.section{
+
+padding:70px 20px;
+text-align:center;
+
+}
+
+.grid{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+margin-top:30px;
+
+}
+
+.card{
+
+background:rgba(0,0,0,0.85);
+padding:20px;
+border-radius:12px;
+transition:0.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-10px);
+box-shadow:0 0 25px #00ffae;
+
+}
+
+.card img{
+
+width:100%;
+border-radius:10px;
+margin-bottom:10px;
+
+}
+
+.price{
+
+color:#00ffae;
+font-size:20px;
+margin:10px 0;
+
+}
+
+button{
+
+padding:10px 20px;
+border:none;
+border-radius:8px;
+background:linear-gradient(45deg,#00ffae,#00c3ff);
+cursor:pointer;
+font-weight:600;
+
+}
+
+footer{
+
+text-align:center;
+padding:20px;
+background:rgba(0,0,0,0.9);
+
+}
