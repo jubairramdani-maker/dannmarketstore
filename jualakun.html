@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jual Akun - DannMarket Store</title>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+
+<header class="navbar">
+<h1 class="logo">DannMarket Store</h1>
+</header>
+
+<section class="container">
+<h2>Jual Akun Anda</h2>
+<form class="sell-form" onsubmit="sellAccount(event)">
+<input type="text" placeholder="Nama Akun" required>
+<input type="text" placeholder="Level / Item Utama" required>
+<input type="number" placeholder="Harga" required>
+<textarea placeholder="Deskripsi Akun" required></textarea>
+<button type="submit">Kirim</button>
+</form>
+</section>
+
+<section class="social-footer-pro">
+<h2>Follow kami untuk update akun terbaru</h2>
+<div class="social-icons">
+<a href="https://www.instagram.com/username" target="_blank"><img src="images/instagram.png" alt="Instagram"></a>
+<a href="https://www.tiktok.com/@username" target="_blank"><img src="images/tiktok.png" alt="TikTok"></a>
+<a href="https://www.youtube.com/channel/CHANNEL_ID" target="_blank"><img src="images/youtube.png" alt="YouTube"></a>
+</div>
+<a href="https://www.instagram.com/username" target="_blank" class="follow-btn">Follow Sekarang</a>
+<p>© 2026 DannMarket Store</p>
+</section>
+
+<script>
+function sellAccount(e){
+    e.preventDefault();
+    alert("Akun berhasil dikirim! Admin akan menghubungi Anda.");
+}
+</script>
+
+</body>
+</html>

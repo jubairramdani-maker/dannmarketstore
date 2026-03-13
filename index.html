@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DannMarket Store</title>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+<h1 class="logo">DannMarket Store</h1>
+</header>
+
+<!-- Banner Slider -->
+<section class="banner-slider">
+<div class="slides">
+<img src="Proyek Baru 7 [3A7BABF].png" class="slide active" alt="Banner 1">
+<img src="images/banner2.jpg" class="slide" alt="Banner 2">
+<img src="images/banner3.jpg" class="slide" alt="Banner 3">
+</div>
+</section>
+
+<!-- Flash Sale -->
+<section class="flash-sale">
+<h2>🔥 Flash Sale Hari Ini</h2>
+<div class="flash-timer">
+<span id="days">14</span>d :
+<span id="hours">9</span>h :
+<span id="minutes">40</span>m :
+<span id="seconds">60</span>s
+</div>
+<div class="flash-grid">
+<div class="flash-item">
+<img src="Screenshot_2026-03-11-18-58-00-19_080032403b0f3d7ce099ec68649d222a.jpg" alt="Akun Flash 1">
+<h3>akun permanet kitsune+dough</h3>
+<p class="price">Rp100.000 <span class="old-price">Rp130.000</span></p>
+<button onclick="buy('Akun Flash perm kitsune+dough')">Beli Sekarang</button>
+</div>
+<div class="flash-item">
+<img src="" alt="IMG-20260311-WA0224.jpg">
+<h3>akun v4 angel</h3>
+<p class="price">Rp25.000 <span class="old-price">Rp35.000</span></p>
+<button onclick="buy('Akun v4 angel')">Beli Sekarang</button>
+</div>
+</div>
+</section>
+
+<!-- Search Box -->
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Cari akun..." onkeyup="searchAccount()">
+<button onclick="searchAccount()">Cari</button>
+</div>
+
+<!q-- Menu Utama -->
+<section class="container">
+<h2>Menu</h2>
+<div class="product-grid">
+<a class="product" href="beli-akun.html"><h3>Beli Akun</h3></a>
+<a class="product" href="topup.html"><h3>Top Up</h3></a>
+<a class="product" href="joki.html"><h3>Joki</h3></a>
+<a class="product" href="jualakun.html"><h3>Jual Akun</h3></a>
+</div>
+</section>
+
+<!-- Footer Social Media -->
+<section class="social-footer-pro">
+<h2>Follow kami untuk update akun terbaru</h2>
+<div class="social-icons">
+<a href="https://www.instagram.com/username" target="_blank"><img src="images/instagram.png" alt="Instagram"></a>
+<a href="https://www.tiktok.com/@username" target="_blank"><img src="images/tiktok.png" alt="TikTok"></a>
+<a href="https://www.youtube.com/channel/CHANNEL_ID" target="_blank"><img src="images/youtube.png" alt="YouTube"></a>
+</div>
+<a href="https://www.instagram.com/username" target="_blank" class="follow-btn">Follow Sekarang</a>
+<p>© 2026 DannMarket Store</p>
+</section>
+
+</body>
+</html>
