@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Always Anime</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen" class="loading-screen">
+  <div class="loading-content">
+    <div class="loading-logo">
+      <span class="logo-always">ALWAYS</span>
+      <span class="logo-anime">ANIME</span>
+    </div>
+    <div class="loading-bar-wrap">
+      <div class="loading-bar" id="loadingBar"></div>
+    </div>
+    <p class="loading-text">Memuat dunia anime...</p>
+  </div>
+  <div class="loading-particles" id="loadingParticles"></div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="toast"></div>
+
+<!-- AUTH MODAL -->
+<div id="authModal" class="modal-overlay hidden">
+  <div class="modal-box auth-modal">
+    <button class="modal-close" onclick="closeModal('authModal')"><i class="fas fa-times"></i></button>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Masuk</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Daftar</button>
+    </div>
+
+    <div id="loginForm" class="auth-form">
+      <h2>Selamat Datang!</h2>
+      <p class="auth-sub">Lanjutkan perjalanan anime kamu</p>
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="loginEmail" placeholder="Email" />
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="loginPassword" placeholder="Password" />
+      </div>
+      <button class="btn-primary full" onclick="handleLogin()">Masuk</button>
+      <div class="divider"><span>atau</span></div>
+      <button class="btn-google" onclick="handleGoogleLogin()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Masuk dengan Google
+      </button>
+      <p class="auth-hint">Demo: admin@always.com / dev@always.com / user@test.com (pass: 123456)</p>
+    </div>
+
+    <div id="registerForm" class="auth-form hidden">
+      <h2>Buat Akun</h2>
+      <p class="auth-sub">Gabung komunitas Always Anime</p>
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="regName" placeholder="Username" />
+      </div>
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="regEmail" placeholder="Email" />
+      </div>
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="regPassword" placeholder="Password" />
+      </div>
+      <button class="btn-primary full" onclick="handleRegister()">Daftar Sekarang</button>
+      <div class="divider"><span>atau</span></div>
+      <button class="btn-google" onclick="handleGoogleLogin()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+        Daftar dengan Google
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- WATCH MODAL -->
+<div id="watchModal" class="modal-overlay hidden">
+  <div class="modal-box watch-modal">
+    <button class="modal-close" onclick="closeModal('watchModal')"><i class="fas fa-times"></i></button>
+    <div class="watch-header">
+      <h2 id="watchTitle">Judul Anime</h2>
+      <div class="watch-meta">
+        <span id="watchEpisode"></span>
+        <span class="watch-viewers"><i class="fas fa-eye"></i> <span id="watchViewers">0</span> menonton</span>
+      </div>
+    </div>
+    <div class="video-container">
+      <div class="video-player" id="videoPlayer">
+        <div class="video-placeholder">
+          <i class="fas fa-play-circle"></i>
+          <p>Tekan Play untuk menonton</p>
+          <small id="videoSource"></small>
+        </div>
+        <iframe id="videoFrame" style="display:none;width:100%;height:100%;border:none;" allowfullscreen></iframe>
+      </div>
+      <div class="episode-list" id="episodeList"></div>
+    </div>
+    <div class="watch-actions">
+      <button class="btn-icon" onclick="toggleFavorite(currentAnime)" id="watchFavBtn"><i class="fas fa-heart"></i> Favorit</button>
+      <button class="btn-icon" onclick="showSection('comments')"><i class="fas fa-comment"></i> Komentar</button>
+      <span class="rating-display"><i class="fas fa-star"></i> <span id="watchRating">8.5</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ANIME DETAIL MODAL -->
+<div id="detailModal" class="modal-overlay hidden">
+  <div class="modal-box detail-modal">
+    <button class="modal-close" onclick="closeModal('detailModal')"><i class="fas fa-times"></i></button>
+    <div class="detail-content">
+      <div class="detail-poster">
+        <img id="detailImg" src="" alt="">
+        <div class="detail-badges">
+          <span class="badge-score"><i class="fas fa-star"></i> <span id="detailScore">0</span></span>
+          <span class="badge-viewers"><i class="fas fa-eye"></i> <span id="detailViewers">0</span></span>
+        </div>
+        <button class="btn-change-img hidden" id="btnChangeImg" onclick="changeAnimeImage()"><i class="fas fa-camera"></i> Ubah Gambar</button>
+      </div>
+      <div class="detail-info">
+        <h2 id="detailTitle"></h2>
+        <div class="detail-tags" id="detailTags"></div>
+        <p class="detail-desc" id="detailDesc"></p>
+        <div class="detail-stats">
+          <div><span>Episode</span><strong id="detailEps">?</strong></div>
+          <div><span>Status</span><strong id="detailStatus">?</strong></div>
+          <div><span>Studio</span><strong id="detailStudio">?</strong></div>
+          <div><span>Tahun</span><strong id="detailYear">?</strong></div>
+        </div>
+        <div class="detail-buttons">
+          <button class="btn-primary" onclick="watchAnime(currentDetailAnime)"><i class="fas fa-play"></i> Tonton Sekarang</button>
+          <button class="btn-secondary" id="detailFavBtn" onclick="toggleFavorite(currentDetailAnime)"><i class="fas fa-heart"></i> Favorit</button>
+          <button class="btn-secondary" onclick="showComments(currentDetailAnime)"><i class="fas fa-comment"></i> Komentar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMENTS MODAL -->
+<div id="commentsModal" class="modal-overlay hidden">
+  <div class="modal-box comments-modal">
+    <button class="modal-close" onclick="closeModal('commentsModal')"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-comments"></i> Komentar - <span id="commentAnimeTitle"></span></h2>
+    <div class="comments-list" id="commentsList"></div>
+    <div class="comment-input-area">
+      <img id="commentUserAvatar" src="" class="avatar-sm" alt="">
+      <div class="comment-input-box">
+        <textarea id="commentInput" placeholder="Tulis komentar..."></textarea>
+        <button class="btn-primary" onclick="submitComment()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" class="modal-overlay hidden">
+  <div class="modal-box profile-modal">
+    <button class="modal-close" onclick="closeModal('profileModal')"><i class="fas fa-times"></i></button>
+    <div class="profile-header">
+      <div class="profile-avatar-wrap">
+        <img id="profileAvatar" src="" class="profile-avatar" alt="">
+        <button class="btn-change-avatar" onclick="changeAvatar()"><i class="fas fa-camera"></i></button>
+      </div>
+      <div class="profile-info">
+        <h2 id="profileName"></h2>
+        <span id="profileRole" class="role-badge"></span>
+        <p id="profileEmail" class="profile-email"></p>
+        <div class="profile-stats">
+          <div><strong id="profFavCount">0</strong><span>Favorit</span></div>
+          <div><strong id="profHistCount">0</strong><span>Ditonton</span></div>
+          <div><strong id="profCommentCount">0</strong><span>Komentar</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="profile-sections">
+      <button class="prof-tab active" onclick="switchProfileTab('favorites')"><i class="fas fa-heart"></i> Favorit</button>
+      <button class="prof-tab" onclick="switchProfileTab('history')"><i class="fas fa-history"></i> Riwayat</button>
+    </div>
+    <div id="profileTabContent" class="profile-tab-content"></div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal-overlay hidden">
+  <div class="modal-box settings-modal">
+    <button class="modal-close" onclick="closeModal('settingsModal')"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-cog"></i> Pengaturan</h2>
+    <div class="settings-list">
+      <div class="setting-item">
+        <div class="setting-label"><i class="fas fa-moon"></i> Mode Gelap</div>
+        <label class="toggle"><input type="checkbox" id="darkModeToggle" checked onchange="toggleDarkMode()"><span class="slider"></span></label>
+      </div>
+      <div class="setting-item">
+        <div class="setting-label"><i class="fas fa-bell"></i> Notifikasi</div>
+        <label class="toggle"><input type="checkbox" id="notifToggle" checked><span class="slider"></span></label>
+      </div>
+      <div class="setting-item">
+        <div class="setting-label"><i class="fas fa-language"></i> Bahasa</div>
+        <select class="setting-select">
+          <option>Indonesia</option>
+          <option>English</option>
+          <option>日本語</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <div class="setting-label"><i class="fas fa-video"></i> Kualitas Default</div>
+        <select class="setting-select">
+          <option>Auto</option>
+          <option>1080p</option>
+          <option>720p</option>
+          <option>480p</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <div class="setting-label"><i class="fas fa-shield-alt"></i> Mode Aman</div>
+        <label class="toggle"><input type="checkbox" id="safeMode"><span class="slider"></span></label>
+      </div>
+    </div>
+    <div class="settings-danger">
+      <button class="btn-danger" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div id="adminModal" class="modal-overlay hidden">
+  <div class="modal-box admin-modal">
+    <button class="modal-close" onclick="closeModal('adminModal')"><i class="fas fa-times"></i></button>
+    <h2><i class="fas fa-crown"></i> Panel Admin</h2>
+    <div class="admin-stats">
+      <div class="admin-stat"><i class="fas fa-users"></i><div><strong id="adminUserCount">0</strong><span>Pengguna</span></div></div>
+      <div class="admin-stat"><i class="fas fa-film"></i><div><strong id="adminAnimeCount">0</strong><span>Anime</span></div></div>
+      <div class="admin-stat"><i class="fas fa-eye"></i><div><strong id="adminViewCount">0</strong><span>Total Tonton</span></div></div>
+      <div class="admin-stat"><i class="fas fa-comment"></i><div><strong id="adminCommentCount">0</strong><span>Komentar</span></div></div>
+    </div>
+    <div class="admin-users">
+      <h3>Daftar Pengguna</h3>
+      <div id="adminUserList" class="admin-user-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLIC CHAT MODAL -->
+<div id="chatModal" class="modal-overlay hidden">
+  <div class="modal-box chat-modal">
+    <button class="modal-close" onclick="closeModal('chatModal')"><i class="fas fa-times"></i></button>
+    <div class="chat-header">
+      <i class="fas fa-comments"></i>
+      <h2>Obrolan Publik</h2>
+      <span class="chat-online" id="chatOnlineCount">0 online</span>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area">
+      <img id="chatUserAvatar" src="" class="avatar-sm" alt="">
+      <input type="text" id="chatInput" placeholder="Kirim pesan..." onkeypress="if(event.key==='Enter')sendChatMessage()">
+      <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-always">ALWAYS</span>
+    <span class="logo-anime">ANIME</span>
+  </div>
+  <div class="sidebar-user hidden" id="sidebarUser">
+    <img id="sidebarAvatar" src="" class="avatar-sm" alt="">
+    <div>
+      <p id="sidebarName">User</p>
+      <span id="sidebarRoleBadge" class="role-badge-sm"></span>
+    </div>
+  </div>
+  <ul class="sidebar-menu">
+    <li class="active" onclick="showSection('home')"><i class="fas fa-home"></i><span>Beranda</span></li>
+    <li onclick="showSection('explore')"><i class="fas fa-compass"></i><span>Jelajahi</span></li>
+    <li onclick="showSection('trending')"><i class="fas fa-fire"></i><span>Trending</span></li>
+    <li onclick="showSection('schedule')"><i class="fas fa-calendar"></i><span>Jadwal</span></li>
+    <li onclick="showSection('favorites')"><i class="fas fa-heart"></i><span>Favorit</span></li>
+    <li onclick="showSection('history')"><i class="fas fa-history"></i><span>Riwayat</span></li>
+    <li onclick="openModal('chatModal')"><i class="fas fa-comments"></i><span>Obrolan</span></li>
+    <li id="adminMenuBtn" class="hidden" onclick="openAdminPanel()"><i class="fas fa-crown"></i><span>Admin</span></li>
+  </ul>
+  <div class="sidebar-bottom">
+    <li onclick="openModal('settingsModal')"><i class="fas fa-cog"></i><span>Pengaturan</span></li>
+    <li id="profileBtn" onclick="openProfile()"><i class="fas fa-user"></i><span>Profil</span></li>
+    <li id="loginBtn" onclick="openModal('authModal')"><i class="fas fa-sign-in-alt"></i><span>Masuk</span></li>
+  </div>
+</nav>
+
+<!-- MOBILE NAVBAR -->
+<nav class="mobile-nav">
+  <button onclick="showSection('home')" class="active"><i class="fas fa-home"></i><span>Beranda</span></button>
+  <button onclick="showSection('explore')"><i class="fas fa-compass"></i><span>Jelajahi</span></button>
+  <button onclick="showSection('trending')"><i class="fas fa-fire"></i><span>Trending</span></button>
+  <button onclick="openModal('chatModal')"><i class="fas fa-comments"></i><span>Obrolan</span></button>
+  <button onclick="openProfile()"><i class="fas fa-user"></i><span>Profil</span></button>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main-content" id="mainContent">
+
+  <!-- HEADER -->
+  <header class="top-header">
+    <button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Cari anime..." oninput="searchAnime(this.value)">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="openModal('chatModal')"><i class="fas fa-comments"></i><span class="notif-dot"></span></button>
+      <button class="header-btn" id="headerProfileBtn" onclick="openProfile()"><i class="fas fa-user-circle"></i></button>
+      <button class="header-btn" id="headerLoginBtn" onclick="openModal('authModal')"><i class="fas fa-sign-in-alt"></i></button>
+    </div>
+  </header>
+
+  <!-- HOME SECTION -->
+  <section id="section-home" class="section active">
+    <!-- HERO BANNER -->
+    <div class="hero-banner" id="heroBanner">
+      <div class="hero-slide active" id="heroSlide">
+        <div class="hero-bg" id="heroBg"></div>
+        <div class="hero-content">
+          <div class="hero-badges">
+            <span class="hero-badge">🔥 POPULER</span>
+            <span class="hero-badge-rating"><i class="fas fa-star"></i> <span id="heroRating">9.2</span></span>
+          </div>
+          <h1 id="heroTitle">Attack on Titan</h1>
+          <p id="heroDesc" class="hero-desc">Manusia melawan Titan raksasa dalam pertarungan epik untuk bertahan hidup.</p>
+          <div class="hero-actions">
+            <button class="btn-hero-play" id="heroPlayBtn"><i class="fas fa-play"></i> Tonton Sekarang</button>
+            <button class="btn-hero-info" id="heroInfoBtn"><i class="fas fa-info-circle"></i> Detail</button>
+          </div>
+          <div class="hero-stats">
+            <span><i class="fas fa-eye"></i> <span id="heroViewers">12,456</span> menonton</span>
+            <span><i class="fas fa-heart"></i> <span id="heroFavs">8,920</span> favorit</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-dots" id="heroDots"></div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="category-scroll">
+      <button class="cat-btn active" onclick="filterCategory('all')">Semua</button>
+      <button class="cat-btn" onclick="filterCategory('action')">Action</button>
+      <button class="cat-btn" onclick="filterCategory('romance')">Romance</button>
+      <button class="cat-btn" onclick="filterCategory('fantasy')">Fantasy</button>
+      <button class="cat-btn" onclick="filterCategory('comedy')">Comedy</button>
+      <button class="cat-btn" onclick="filterCategory('horror')">Horror</button>
+      <button class="cat-btn" onclick="filterCategory('sci-fi')">Sci-Fi</button>
+      <button class="cat-btn" onclick="filterCategory('slice-of-life')">Slice of Life</button>
+      <button class="cat-btn" onclick="filterCategory('isekai')">Isekai</button>
+      <button class="cat-btn" onclick="filterCategory('sports')">Sports</button>
+    </div>
+
+    <!-- TRENDING NOW -->
+    <div class="section-header">
+      <h2><i class="fas fa-fire"></i> Trending Sekarang</h2>
+      <button onclick="showSection('trending')">Lihat Semua</button>
+    </div>
+    <div class="anime-row" id="trendingRow"></div>
+
+    <!-- NEW RELEASES -->
+    <div class="section-header">
+      <h2><i class="fas fa-sparkles"></i> Terbaru</h2>
+      <button onclick="showSection('explore')">Lihat Semua</button>
+    </div>
+    <div class="anime-row" id="newReleasesRow"></div>
+
+    <!-- TOP RATED -->
+    <div class="section-header">
+      <h2><i class="fas fa-trophy"></i> Rating Tertinggi</h2>
+      <button>Lihat Semua</button>
+    </div>
+    <div class="anime-row" id="topRatedRow"></div>
+
+    <!-- CONTINUE WATCHING -->
+    <div id="continueSection" class="hidden">
+      <div class="section-header">
+        <h2><i class="fas fa-play-circle"></i> Lanjutkan Menonton</h2>
+      </div>
+      <div class="anime-row" id="continueRow"></div>
+    </div>
+
+    <!-- LIVE VIEWERS -->
+    <div class="live-section">
+      <div class="live-header">
+        <span class="live-dot"></span>
+        <h3>SEDANG DITONTON SEKARANG</h3>
+      </div>
+      <div class="live-stats" id="liveStats"></div>
+    </div>
+  </section>
+
+  <!-- EXPLORE SECTION -->
+  <section id="section-explore" class="section">
+    <div class="explore-header">
+      <h2>Jelajahi Anime</h2>
+      <div class="explore-filters">
+        <select id="filterGenre" onchange="applyFilters()">
+          <option value="">Semua Genre</option>
+          <option value="action">Action</option>
+          <option value="romance">Romance</option>
+          <option value="fantasy">Fantasy</option>
+          <option value="comedy">Comedy</option>
+          <option value="horror">Horror</option>
+          <option value="sci-fi">Sci-Fi</option>
+          <option value="isekai">Isekai</option>
+          <option value="sports">Sports</option>
+        </select>
+        <select id="filterYear" onchange="applyFilters()">
+          <option value="">Semua Tahun</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+          <option value="2022">2022</option>
+          <option value="2021">2021</option>
+          <option value="2020">2020</option>
+        </select>
+        <select id="filterStatus" onchange="applyFilters()">
+          <option value="">Semua Status</option>
+          <option value="ongoing">Ongoing</option>
+          <option value="completed">Completed</option>
+        </select>
+        <select id="sortBy" onchange="applyFilters()">
+          <option value="popular">Terpopuler</option>
+          <option value="rating">Rating Tertinggi</option>
+          <option value="newest">Terbaru</option>
+          <option value="az">A-Z</option>
+        </select>
+      </div>
+    </div>
+    <div class="anime-grid" id="exploreGrid"></div>
+    <div class="load-more">
+      <button class="btn-secondary" onclick="loadMoreAnime()"><i class="fas fa-plus"></i> Muat Lebih Banyak</button>
+    </div>
+  </section>
+
+  <!-- TRENDING SECTION -->
+  <section id="section-trending" class="section">
+    <div class="section-title-big">
+      <i class="fas fa-fire"></i>
+      <h2>Trending Minggu Ini</h2>
+    </div>
+    <div class="trending-list" id="trendingList"></div>
+  </section>
+
+  <!-- SCHEDULE SECTION -->
+  <section id="section-schedule" class="section">
+    <div class="section-title-big"><i class="fas fa-calendar"></i><h2>Jadwal Rilis</h2></div>
+    <div class="schedule-grid" id="scheduleGrid"></div>
+  </section>
+
+  <!-- FAVORITES SECTION -->
+  <section id="section-favorites" class="section">
+    <div class="section-title-big"><i class="fas fa-heart"></i><h2>Anime Favorit</h2></div>
+    <div class="anime-grid" id="favoritesGrid"></div>
+    <div id="emptyFavorites" class="empty-state">
+      <i class="fas fa-heart-broken"></i>
+      <p>Belum ada favorit</p>
+      <button onclick="showSection('explore')" class="btn-primary">Jelajahi Anime</button>
+    </div>
+  </section>
+
+  <!-- HISTORY SECTION -->
+  <section id="section-history" class="section">
+    <div class="section-title-big"><i class="fas fa-history"></i><h2>Riwayat Tonton</h2></div>
+    <div class="anime-grid" id="historyGrid"></div>
+    <div id="emptyHistory" class="empty-state">
+      <i class="fas fa-film"></i>
+      <p>Belum ada riwayat</p>
+      <button onclick="showSection('explore')" class="btn-primary">Mulai Menonton</button>
+    </div>
+  </section>
+
+  <!-- COMMENTS SECTION -->
+  <section id="section-comments" class="section">
+    <div class="section-title-big"><i class="fas fa-comments"></i><h2>Komentar Terbaru</h2></div>
+    <div id="allComments" class="all-comments"></div>
+  </section>
+
+</main>
+
+<!-- FLOATING CHAT BUTTON -->
+<button class="floating-chat" onclick="openModal('chatModal')">
+  <i class="fas fa-comments"></i>
+  <span id="chatBadge" class="chat-badge">3</span>
+</button>
+
+<script src="db.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
